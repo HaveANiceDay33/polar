@@ -23,6 +23,7 @@ import com.polar.sdk.api.PolarH10OfflineExerciseApi.SampleType
 import com.polar.sdk.api.model.LedConfig
 import com.polar.sdk.api.model.PolarDeviceInfo
 import com.polar.sdk.api.model.PolarExerciseEntry
+import com.polar.sdk.api.model.PolarFirstTimeUseConfig
 import com.polar.sdk.api.model.PolarHrData
 import com.polar.sdk.api.model.PolarSensorSetting
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -157,6 +158,8 @@ class PolarPlugin :
             "enableSdkMode" -> enableSdkMode(call, result)
             "disableSdkMode" -> disableSdkMode(call, result)
             "isSdkModeEnabled" -> isSdkModeEnabled(call, result)
+            "doFirstTimeUse" -> doFirstTimeUse(call, result)
+            "isFtuDone" -> isFtuDone(call, result)
             else -> result.notImplemented()
         }
     }
@@ -477,6 +480,42 @@ class PolarPlugin :
             })
             .discard()
     }
+
+    private fun doFirstTimeUse(
+        call: MethodCall,
+        result: Result,
+    ) {
+        val arguments = call.arguments as List<*>
+        val identifier = arguments[0] as String
+        val ftuConfig = gson.fromJson(arguments[1] as String, PolarFirstTimeUseConfig::class.java)
+        wrapper.api
+            .doFirstTimeUse(identifier, ftuConfig)
+            .subscribe({
+                runOnUiThread { result.success(it) }
+            }, {
+                runOnUiThread {
+                    result.error(it.toString(), it.message, null)
+                }
+            })
+            .discard()
+    }
+
+    private fun isFtuDone(
+        call: MethodCall,
+        result: Result,
+    ) {
+        val identifier = call.arguments as String
+        wrapper.api
+            .isFtuDone(identifier)
+            .subscribe({
+                runOnUiThread { result.success(it) }
+            }, {
+                runOnUiThread {
+                    result.error(it.toString(), it.message, null)
+                }
+            })
+            .discard()
+    }
 }
 
 class PolarWrapper(
@@ -640,6 +679,15 @@ class StreamingChannel(
                         identifier,
                         settings,
                     )
+                PolarDeviceDataType.SKIN_TEMPERATURE ->
+                    api.startSkinTemperatureStreaming(
+                        identifier,
+                        settings,
+                    )
+                PolarDeviceDataType.PRESSURE ->
+                    api.startPressureStreaming(identifier, settings)
+                PolarDeviceDataType.LOCATION ->
+                    api.startLocationStreaming(identifier, settings)
             }
 
         subscription =

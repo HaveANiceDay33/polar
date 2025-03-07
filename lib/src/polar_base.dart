@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polar/polar.dart';
 
+import 'model/polar_first_time_use_config.dart';
+
 /// Flutter implementation of the [PolarBleSdk]
 class Polar {
   static const _channel = MethodChannel('polar');
@@ -125,6 +127,7 @@ class Polar {
           ),
         );
         return;
+
       default:
         throw UnimplementedError(call.method);
     }
@@ -535,6 +538,18 @@ class Polar {
       'doFactoryReset',
       [identifier, preservePairingInformation],
     );
+  }
+
+  /// performs the first time use setup for the Polar 360
+  Future<void> doFirstTimeUse(
+      String identifier, PolarFirstTimeUseConfig config) {
+    return _channel
+        .invokeMethod('doFirstTimeUse', [identifier, jsonEncode(config)]);
+  }
+
+  /// Checks if the first time setup is done.
+  Future<void> isFtuDone(String identifier) {
+    return _channel.invokeMethod('isFtuDone', identifier);
   }
 
   ///  Enables SDK mode.
