@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'polar_device_first_time_use_config.g.dart';
+part 'polar_first_time_use_config.g.dart';
 
 /// config for the first time use of the Polar device
 @JsonSerializable()
