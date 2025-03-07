@@ -27,7 +27,7 @@ class PolarFirstTimeUseConfig {
   final int restingHeartRate;
 
   /// Training background of the user
-  final TrainingBackground trainingBackground;
+  final int trainingBackground;
 
   /// Device time in string format
   final String deviceTime;
@@ -42,12 +42,12 @@ class PolarFirstTimeUseConfig {
   PolarFirstTimeUseConfig({
     this.gender = Gender.male,
     required this.date,
+    required this.trainingBackground,
     this.height = 165,
     this.weight = 70,
     this.maxHeartRate = 220,
     this.vo2Max = 40,
     this.restingHeartRate = 60,
-    this.trainingBackground = TrainingBackground.regular,
     this.deviceTime = '',
     this.typicalDay = TypicalDay.mostlySitting,
     this.sleepGoalMinutes = 480,
@@ -93,6 +93,7 @@ enum TrainingBackground {
 
   /// value associated with the enum
   final int value;
+
   const TrainingBackground(this.value);
 }
 
@@ -112,5 +113,6 @@ enum TypicalDay {
 
   /// name of the typical day
   final String name;
+
   const TypicalDay(this.value, this.name);
 }

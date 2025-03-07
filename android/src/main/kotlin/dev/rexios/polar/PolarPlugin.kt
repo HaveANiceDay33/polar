@@ -24,6 +24,7 @@ import com.polar.sdk.api.model.LedConfig
 import com.polar.sdk.api.model.PolarDeviceInfo
 import com.polar.sdk.api.model.PolarExerciseEntry
 import com.polar.sdk.api.model.PolarFirstTimeUseConfig
+import com.polar.sdk.api.model.PolarHealthThermometerData
 import com.polar.sdk.api.model.PolarHrData
 import com.polar.sdk.api.model.PolarSensorSetting
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -491,7 +492,7 @@ class PolarPlugin :
         wrapper.api
             .doFirstTimeUse(identifier, ftuConfig)
             .subscribe({
-                runOnUiThread { result.success(it) }
+                runOnUiThread { result.success(null) }
             }, {
                 runOnUiThread {
                     result.error(it.toString(), it.message, null)
@@ -516,7 +517,7 @@ class PolarPlugin :
             })
             .discard()
     }
-}
+    }
 
 class PolarWrapper(
     context: Context,
@@ -607,10 +608,17 @@ class PolarWrapper(
         invoke("batteryLevelReceived", listOf(identifier, level))
     }
 
-    @Deprecated("", replaceWith = ReplaceWith(""))
-    override fun hrFeatureReady(identifier: String) {
-        // Do nothing
+    override fun htsNotificationReceived(
+        identifier: String,
+        data: PolarHealthThermometerData
+    ) {
+        invoke("htNotificationReceived", listOf(identifier, data))
     }
+
+//    @Deprecated("", replaceWith = ReplaceWith(""))
+//    override fun hrFeatureReady(identifier: String) {
+//        // Do nothing
+//    }
 
     @Deprecated("", replaceWith = ReplaceWith(""))
     override fun hrNotificationReceived(
@@ -620,23 +628,23 @@ class PolarWrapper(
         // Do nothing
     }
 
-    @Deprecated("", replaceWith = ReplaceWith(""))
-    override fun polarFtpFeatureReady(identifier: String) {
-        // Do nothing
-    }
-
-    @Deprecated("", replaceWith = ReplaceWith(""))
-    override fun sdkModeFeatureAvailable(identifier: String) {
-        // Do nothing
-    }
-
-    @Deprecated("", replaceWith = ReplaceWith(""))
-    override fun streamingFeaturesReady(
-        identifier: String,
-        features: Set<PolarDeviceDataType>,
-    ) {
-        // Do nothing
-    }
+//    @Deprecated("", replaceWith = ReplaceWith(""))
+//    override fun polarFtpFeatureReady(identifier: String) {
+//        // Do nothing
+//    }
+//
+//    @Deprecated("", replaceWith = ReplaceWith(""))
+//    override fun sdkModeFeatureAvailable(identifier: String) {
+//        // Do nothing
+//    }
+//
+//    @Deprecated("", replaceWith = ReplaceWith(""))
+//    override fun streamingFeaturesReady(
+//        identifier: String,
+//        features: Set<PolarDeviceDataType>,
+//    ) {
+//        // Do nothing
+//    }
 }
 
 class StreamingChannel(
