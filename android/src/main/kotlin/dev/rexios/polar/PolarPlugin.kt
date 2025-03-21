@@ -644,6 +644,10 @@ class StreamingChannel(
                         identifier,
                         settings,
                     )
+                PolarDeviceDataType.PRESSURE ->
+                    api.startPressureStreaming(identifier, settings)
+                PolarDeviceDataType.LOCATION ->
+                    api.startLocationStreaming(identifier, settings)
             }
 
         subscription =
