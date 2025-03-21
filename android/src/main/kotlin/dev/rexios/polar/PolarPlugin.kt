@@ -634,9 +634,13 @@ class StreamingChannel(
                         identifier,
                         settings,
                     )
-
                 PolarDeviceDataType.TEMPERATURE ->
                     api.startTemperatureStreaming(
+                        identifier,
+                        settings,
+                    )
+                PolarDeviceDataType.SKIN_TEMPERATURE ->
+                    api.startSkinTemperatureStreaming(
                         identifier,
                         settings,
                     )
